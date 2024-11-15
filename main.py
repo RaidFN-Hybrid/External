@@ -1,91 +1,30 @@
-"""
-MIT License (Modified)
-
-Copyright (c) 2024 PabloProxy
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to use
-the Software solely for personal, internal purposes. Modification, merging, 
-publishing, distributing, sublicensing, or selling copies of the Software, 
-and any form of external distribution or making the Software available publicly, 
-is strictly prohibited without express written permission from the copyright holder.
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-**IMPORTANT:** PabloProxy is **NOT** open-source software. Any unauthorized attempt 
-to distribute, publish, or sublicense the Software, or to share the Software publicly, 
-will result in legal action, including but not limited to lawsuits. The authors will 
-pursue all available legal remedies to protect their rights.
-
-"""
-
-#  I guess pabloproxy is not open source .
-# If you're gonna skid, i suggest you get some bitches first 😘
-
-import sys,os,requests
-if '--install' in sys.argv:
-  requiredFiles = [
-    "START.bat",
-    "config.json"
-  ]
-  for File in requiredFiles:
-    response = requests.get(f"https://raw.githubusercontent.com/PirxcyFinal/PirxcyProxyFinal/main/{File}")
-    
-    with open(
-      File, 
-      'wb'
-    ) as downloadedFile:
-      downloadedFile.write(response.content)
-      downloadedFile.close()
-      print(f"[+] Installed {File}")
-      
-  sys.exit(1)
-
+import sys,os
 import semver 
 import survey
 import aiohttp
 import asyncio
 import traceback
 import json,json
-import random
-import crayons
 import logging
 import winreg
 import aiofiles
 import psutil
-import fade
 
 
 
 import xml.etree.ElementTree as ET
 
-from pystyle import *
-from typing import Any
 from datetime import datetime
 from rich import print_json
-from console.utils import set_title # type: ignore
+from console.utils import set_title
 from mitmproxy.tools.web.master import WebMaster
 from mitmproxy import http
 from mitmproxy.options import Options
 from pypresence import AioPresence
 
 
-appName = "pabloproxy "
+appName = "RaidFN"
 debug = False
-
-logger = logging.getLogger(appName)
-logger.setLevel(logging.INFO)
-
-logging.basicConfig(format=f"[{crayons.blue(appName)}] %(levelname)s %(message)s") # type: ignore
 
 backendTypeMap = {
   "CID": "AthenaCharacter"
@@ -141,24 +80,11 @@ def cls():
   os.system("cls" if os.name == "nt" else "clear")
 
 def readConfig():
-  with open("config.json") as f:
+  with open("userConfig.json") as f:
     config = json.loads(f.read())
     return config
-  
-  #is dumping the same as normal json?
 
 async def aprint(text: str, delay: float):
-  """
-  Asynchronously prints each character of the given text with a specified delay between characters.
-  (gives it a sexy animation)
-
-  Args:
-    text (str): The text to be printed.
-    delay (float): The delay in seconds between printing each character.
-
-  Returns:
-    None
-  """
   for character in text:
     sys.stdout.write(character)
     sys.stdout.flush()
@@ -176,12 +102,8 @@ def center(var: str, space: int | None = None):
   return "\n".join((" " * int(space)) + var for var in var.splitlines())
 
 def processExists(name):
-  '''
-  Check if there is any running process that contains the given name processName.
-  '''
   for process in psutil.process_iter():
     try:
-      # Check if process name contains the given name string.
       if name.lower() in process.name().lower():
         return True
     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
@@ -189,7 +111,6 @@ def processExists(name):
   return False
 
 def proxy_toggle(enable: bool=True):
-  # Open the key where proxy settings are stored
   INTERNET_SETTINGS = winreg.OpenKey(
     winreg.HKEY_CURRENT_USER,
     r"Software\\Microsoft\\Windows\\CurrentVersion\\Internet Settings",
@@ -202,10 +123,7 @@ def proxy_toggle(enable: bool=True):
       _, reg_type = winreg.QueryValueEx(INTERNET_SETTINGS, name)
       winreg.SetValueEx(INTERNET_SETTINGS, name, 0, reg_type, value)
     except FileNotFoundError:
-      # If the key does not exist, create it
       winreg.SetValueEx(INTERNET_SETTINGS, name, 0, winreg.REG_SZ, value)
-
-    # Get current proxy enable status
 
   proxy_enable = winreg.QueryValueEx(INTERNET_SETTINGS, "ProxyEnable")[0]
 
@@ -226,17 +144,7 @@ class Addon:
     self.server = server
 
   def request(self, flow: http.HTTPFlow) -> None:
-    """Handle Requests"""
-    try:
       url = flow.request.pretty_url
-
-      if url.lower().startswith("https://eulatracking-public-service-prod06.ol.epicgames.com/eulatracking/api/public/agreements/fn/account/"):
-        logger.info("Fortnite Start Detected")
-        
-      if ".blurl" in url:
-        logger.info(url)
-        flow.request.url = "https://cdn.pirxcy.dev/master.blurl"
-        logger.info(f".blurl {flow.request.url}")
 
       if (
         "https://fngw-mcp-gc-livefn.ol.epicgames.com/fortnite/api/game/v2/matchmakingservice/ticket/player"
@@ -247,23 +155,10 @@ class Addon:
         flow.request.url = flow.request.url.replace(
           "%3A" + playlistOld, "%3A" + playlistNew
         )
-        logger.info(f"Matchmaking: {flow.request.url}")
-
-      if "/client/" in flow.request.url:
-        logger.info(f"Client Request: {flow.request.url}")
 
       if self.server.app.name:
         nameOld, nameNew = list(self.server.app.nameId.items())[0]
         flow.request.url = flow.request.url.replace(nameOld, nameNew)
-
-      if (".png" in url or ".jpg" in url or ".jpeg" in url) and (
-        ".epic" in url or ".unreal" in url or ".static" in url
-      ):
-        logger.info(f"Image: {flow.request.url}")
-        flow.request.url = "https://cdn.pirxcy.dev/maxresdefault.jpg"
-        #not just on fortnite aswell
-    except Exception as e:
-      logger.error(e)
 
   def websocket_message(self, flow: http.HTTPFlow):
     assert flow.websocket is not None
@@ -272,39 +167,15 @@ class Addon:
     msg = str(msg).replace("\"WIN\"","\"PS5\"")
     msg = msg[1:-1]
     msg = msg
-    
-    if "match" in flow.request.pretty_url.lower():
-      logger.info("Matchmaking:")
-      print_json(msg)
-
-    elif "xmpp" in flow.request.pretty_url.lower():
       
-      if self.server.app.config.get("WebSocketLogging"):
-        # XMPP LOG
-        logger.info("XMPP:")
-        print_json(data=str(msg))
-      
-      if clientMsg:
+    if clientMsg:
         try:
           root = ET.fromstring(msg.replace("WIN","PS5"))
           status_element = root.find("status")
           json_data = json.loads(status_element.text)
 
-          # Change the status
-          currentStatus = json_data["Status"]
-          json_data["Status"] = (
-            f"☑️epic games developer☑️"
-          ) 
-          #json_data['status']['Properties']
-
-
           new_json_text = json.dumps(json_data)
-          
-          if self.server.app.name:
-            new_json_text.replace(
-              nameOld,
-              nameNew
-            )
+
           new_json_text.replace(":WIN:",":PS5:")
           
           status_element.text = new_json_text
@@ -330,16 +201,13 @@ class Addon:
         in 
         url.lower()
       ):
-        logger.info(flow.response.get_text())
         flow.response = http.Response.make(
           204,
           b"", 
           {"Content-Type": "text/html"}
-        )  # Return no body 
+        )
       
       if "putmodularcosmetic" in url.lower():
-        logger.info("Cosmetic Change Detected.")
-
         presetMap = {
           "CosmeticLoadout:LoadoutSchema_Character":"character",
           "CosmeticLoadout:LoadoutSchema_Emotes": "emotes",
@@ -368,7 +236,7 @@ class Addon:
             "slots":  slots
           }
           
-          with open("config.json") as f:
+          with open("userConfig.json") as f:
             data = json.load(f)
           
           key = presetMap.get(presetType)
@@ -392,7 +260,7 @@ class Addon:
           )
           
           with open(
-            "config.json",
+            "userConfig.json",
             "w"
           ) as f:
             json.dump(data, f,indent=2)
@@ -400,7 +268,7 @@ class Addon:
         try:
           accountId = url.split("/")[8]
         except:
-          accountId = "cfd16ec54126497ca57485c1ee1987dc"#SypherPK's ID
+          accountId = "cfd16ec54126497ca57485c1ee1987dc"
             
         response = {
           "profileRevision": 99999,
@@ -466,8 +334,6 @@ class Addon:
 
           
       if"/SetItemFavoriteStatusBatch" in url:
-        logger.info(f"Cosmetic favorite detected.")
-
         text = flow.request.get_text()
         favData = json.loads(text)
         
@@ -476,41 +342,35 @@ class Addon:
         
         if changeValue:
           
-          with open("config.json") as f:
+          with open("userConfig.json") as f:
             data = json.load(f)
           
           for itemId in itemIds:
-            try:
               if itemId not in data["saved"]["favorite"]:
                 data["saved"]["favorite"].append(itemId)
               self.server.app.athena[itemId]["attributes"]['favorite'] = True
-            except Exception as e:#Cannot find account id
-              logger.error(e,traceback.format_exc())
           
-          with open("config.json", "w") as f:
+          with open("userConfig.json", "w") as f:
             json.dump(data, f,indent=2) 
         else:
           
-          with open("config.json") as f:
+          with open("userConfig.json") as f:
             data = json.load(f)
           
           for itemId in itemIds:
-            try:
               if itemId in data["saved"]["favorite"]:
                 data["saved"]["favorite"].remove(itemId)
               self.server.app.athena[itemId]["attributes"]['favorite'] = False
-            except Exception as e:#Cannot find account id
-              logger.error(e,traceback.format_exc())
           
           with open(
-            "config.json",
+            "userConfig.json",
             "w"
           ) as f:
             json.dump(data, f,indent=2)
         try:
           accountId = url.split("/")[8]
         except:
-          accountId = "cfd16ec54126497ca57485c1ee1987dc"#SypherPK's ID
+          accountId = "cfd16ec54126497ca57485c1ee1987dc"
         
         response = {
           "profileRevision": 99999,
@@ -546,8 +406,6 @@ class Addon:
         )
             
       if "/SetItemArchivedStatusBatch" in url:
-        logger.info(f"Cosmetic archive detected.")
-
         text = flow.request.get_text()
         archiveData = json.loads(text)
         
@@ -559,41 +417,35 @@ class Addon:
           data = readConfig()
             
           for itemId in itemIds:
-            try:
               self.server.app.athena[itemId]["attributes"]['archived'] = True
               if itemId not in data['saved']['archived']:
                 data["saved"]["archived"].append(itemId)
-            except Exception as e:#Cannot find account id
-              logger.error(e,traceback.format_exc())
           
           with open(
-            "config.json",
+            "userConfig.json",
             "w"
           ) as f:
             json.dump(data, f,indent=2)
         else:
           
-          with open("config.json") as f:
+          with open("userConfig.json") as f:
             data = json.load(f)
           
           for itemId in itemIds:
-            try:
               self.server.app.athena[itemId]["attributes"]['archived'] = False
               if itemId not in data["saved"]["archived"]:
                 data["saved"]["archived"].remove(itemId)
-            except Exception as e:#Cannot find account id
-              logger.error(e,traceback.format_exc())
           
           with open(
-            "config.json",
+            "userConfig.json",
             "w"
           ) as f:
-            json.dump(data,f,indent=2)#You got me moving on that martini blue    
+            json.dump(data,f,indent=2)   
         
         try:
           accountId = url.split("/")[8]
         except:
-          accountId = "cfd16ec54126497ca57485c1ee1987dc"#SypherPK's ID
+          accountId = "cfd16ec54126497ca57485c1ee1987dc"
           
         response = {
           "profileRevision": 99999,
@@ -629,7 +481,7 @@ class Addon:
         try:
           accountId = url.split("/")[8]
         except:
-          accountId = "cfd16ec54126497ca57485c1ee1987dc"#SypherPK's ID
+          accountId = "cfd16ec54126497ca57485c1ee1987dc"
         
         baseBody = flow.request.get_text()
         reqbody = json.loads(baseBody)
@@ -668,28 +520,28 @@ class Addon:
         text = flow.response.get_text()
         matchData = json.loads(text)
         
-        matchData['allowInvites'] =  True#Alllow Invites Mid-Game
-        matchData['allowJoinInProgress'] =  True#Join via Profile
-        matchData['allowJoinViaPresence'] =  True#Join via Lobby  
+        matchData['allowInvites'] = True
+        matchData['allowJoinInProgress'] = True
+        matchData['allowJoinViaPresence'] = True 
         
-        matchData['allowJoinViaPresenceFriendsOnly'] =  False#Friends only join
-        matchData['attributes']['ALLOWBROADCASTING_b'] =  False#idk wtf this is
-        matchData['attributes']['ALLOWMIGRATION_s'] =  "true"
-        matchData['attributes']['ALLOWREADBYID_s'] =  "true"
-        matchData['attributes']['CHECKSANCTIONS_s'] =  "false"#Check for any bans
-        matchData['attributes']['REJOINAFTERKICK_s'] =  "OPEN"#Ability to rejoin after kick
-        matchData['attributes']['allowMigration_s'] =  True
-        matchData['attributes']['allowReadById_s'] =  True
-        matchData['attributes']['checkSanctions_s'] =  False
-        matchData['attributes']['rejoinAfterKick_s'] =  True
+        matchData['allowJoinViaPresenceFriendsOnly'] = False
+        matchData['attributes']['ALLOWBROADCASTING_b'] = False
+        matchData['attributes']['ALLOWMIGRATION_s'] = "true"
+        matchData['attributes']['ALLOWREADBYID_s'] = "true"
+        matchData['attributes']['CHECKSANCTIONS_s'] = "false"
+        matchData['attributes']['REJOINAFTERKICK_s'] = "OPEN"
+        matchData['attributes']['allowMigration_s'] = True
+        matchData['attributes']['allowReadById_s'] = True
+        matchData['attributes']['checkSanctions_s'] = False
+        matchData['attributes']['rejoinAfterKick_s'] = True
         
-        matchData['shouldAdvertise'] =  True
-        matchData['usesPresence'] =  True
-        matchData['usesStats'] =  False
-        matchData['maxPrivatePlayers'] =  999
-        matchData['maxPublicPlayers'] =  999
-        matchData['openPrivatePlayers'] =  999
-        matchData['openPublicPlayers'] =  999
+        matchData['shouldAdvertise'] = True
+        matchData['usesPresence'] = True
+        matchData['usesStats'] = False
+        matchData['maxPrivatePlayers'] = 999
+        matchData['maxPublicPlayers'] = 999
+        matchData['openPrivatePlayers'] = 999
+        matchData['openPublicPlayers'] = 999
         
         
         flow.response.text = json.dumps(matchData)
@@ -699,7 +551,7 @@ class Addon:
         text = flow.response.get_text()
         athenaFinal = json.loads(text)
         try:
-          athenaFinal["profileChanges"][0]["profile"]["items"].update(self.server.app.athena)  # Add items to current athena
+          athenaFinal["profileChanges"][0]["profile"]["items"].update(self.server.app.athena)
           if self.server.app.level:
             athenaFinal["profileChanges"][0]["profile"]["stats"]["attributes"]["level"] = self.server.app.level
           if self.server.app.battleStars:
@@ -716,28 +568,25 @@ class Addon:
             input(text)
           else:
             pass
-        
 
       if (
         "https://fngw-mcp-gc-livefn.ol.epicgames.com/fortnite/api/game/v2/matchmakingservice/ticket/player"
         in flow.request.pretty_url
         and self.server.app.playlist
       ):
-        logger.info("Matchmaking:")
-        print_json(flow.response.text) # Return matchmaking info.
+        print_json(flow.response.text)
 
       if "/entitlement/api/account/" in url.lower():
         flow.response.text = flow.response.text.replace(
           "BANNED",
-          "ACTIVE"#Allows banned users to log into Fortnite, or any EpicGames Game the user is banned on.
+          "ACTIVE"
         )
-
 
       if url.startswith("https://fngw-mcp-gc-livefn.ol.epicgames.com/fortnite/api/storeaccess/v1/request_access/"):
         accountId = url.split("/")[1:]
         flow.request.url = flow.request.url.replace(
           accountId,
-          "cfd16ec54126497ca57485c1ee1987dc"#SypherPK's AccountID
+          "cfd16ec54126497ca57485c1ee1987dc"
         )
 
       if "/fortnite/api/matchmaking/session/" in url.lower() and "/join" in url.lower():
@@ -745,7 +594,7 @@ class Addon:
           200,
           b"[]",
           {"Content-Type": "application/json"}
-        )  # no body
+        )
 
       if "/fortnite/api/game/v2/br-inventory/account" in url.lower():
         currentStash = {
@@ -753,11 +602,9 @@ class Addon:
             "globalcash": 5000
           }
         }
-        flow.response.text = json.dumps(currentStash)#Infinite Gold
-
+        flow.response.text = json.dumps(currentStash)
 
       if "/lightswitch/api/service/bulk/status" in url.lower():
-        # Launch Fortnite During Downtimes.
         status = [
           {
             "serviceInstanceId": "fortnite",
@@ -781,7 +628,6 @@ class Addon:
         flow.response.text = dump
 
       if self.server.app.name:
-        # Replace Old Name with New Name
         nameOld, nameNew = list(self.server.app.nameId.items())[0]
         if flow.response is not None and flow.response.text is not None:
           flow.response.text = flow.response.text.replace(
@@ -793,21 +639,17 @@ class Addon:
         users = readConfig()
         users = users["InviteExploit"]["users"]
         flow.response.text = json.dumps({"users": users})
-        logger.info(url)
 
     except Exception as e:
       if debug:
         print(traceback.format_exc())
         input(e)
-      else:
-        logger.error(e)
-        logger.error(traceback.format_exc())
 
 
 class MitmproxyServer:
   def __init__(
     self,
-    app: "pabloproxy", # type: ignore
+    app: "RaidFN",
     loop: asyncio.AbstractEventLoop
   ):
     try:
@@ -823,25 +665,20 @@ class MitmproxyServer:
       self.m.options.listen_host = "127.0.0.1"
       self.m.options.listen_port = 1942
       self.m.options.web_open_browser = False
-      self.m.addons.add(Addon(self)) # type: ignore
+      self.m.addons.add(Addon(self))
     except KeyboardInterrupt:
       pass
 
   def run_mitmproxy(self):
     self.running = True
     try:
-      set_title(f"{appName} (CTRL+C To Close Proxy)")
-      # asyncio.create_task(app.updateRPC(state="Running Proxy"))
-      logger.info("Proxy Online/when your done using the hybrid goto proxy setting and turn off proy server thank you for using ")
+      set_title(f"{appName}")
       closeFortnite = readConfig()['closeFortnite']
       if closeFortnite:
         startupTasks = [
           "taskkill /im FortniteLauncher.exe /F",
           "taskkill /im FortniteClient-Win64-Shipping_EAC_EOS.exe /F",
-          "taskkill /im FortniteClient-Win64-Shipping_EAC_EOS.exe /F",
-          "taskkill /im FortniteClient-Win64-Shipping_BE.exe /F",
-          "taskkill /im FortniteClient-Win64-Shipping.exe /F",
-          #"taskkill /im EpicGamesLauncher.exe /F"
+          "taskkill /im FortniteClient-Win64-Shipping.exe /F"
         ]
         for task in startupTasks:
           os.system(task+" > NUL 2>&1")
@@ -851,8 +688,6 @@ class MitmproxyServer:
 
   def start(self):
     self.running = True
-    set_title(f"{appName} (CTRL+C To Close Proxy)")
-    # asyncio.create_task(app.updateRPC(state="Running Proxy"))
     try:
       self.run_mitmproxy()
       proxy_toggle(True)
@@ -873,52 +708,23 @@ class MitmproxyServer:
     proxy_toggle(enable=False)
     return True
 
-
-class pabloproxy:
+class RaidFN:
   def __init__(
     self,
     loop: asyncio.AbstractEventLoop | None=None,
-    configFile: str = "config.json",
+    configFile: str = "userConfig.json",
     client_id=1228345213161050232
   ):
     self.loop = loop or asyncio.get_event_loop()
     self.ProxyEnabled = False
     self.configFile = configFile
     self.state = ""
-    self.appauthor = {
-      "name": "pablofrmdagbr",
-      "Discord": "pablofrmdagbr",
-      "GitHub": "pablofrmdagbr"
-    }
-    self.contributors = [
-      {
-        "name": "Kiko",
-        "Discord": "kikodev",
-        "GitHub": "HyperKiko"
-      },
-      {
-        "name": "The guy that loves kpop a bit toooo much",
-        "Discord": "sochieese",
-        "GitHub": "sochieese"
-      },
-      {
-        "name": "Ajax",
-        "Discord": "ajaxfnc_",
-        "GitHub": "AjaxFNC-YT"
-      }
-    ]
-    self.updateFiles = [
-      "main.py",
-      "requirements.txt"
-    ]
-    self.appVersion = semver.Version.parse("2.4.0")
+    self.appVersion = semver.Version.parse("1.1.0")
     self.client_id = client_id
     self.mitmproxy_server = MitmproxyServer(
       app=self,
       loop=self.loop
     )
-
-    # Set all configurations to false before reading config
     self.running = False
     self.name = False
     self.nameId = {}
@@ -933,14 +739,6 @@ class pabloproxy:
     self.config = {}
 
   async def __async_init__(self):
-    """
-    Async initializer
-    """
-    self.loop.create_task(self.connectRPC())
-    state = "Starting..."
-    self.state = state
-    self.loop.create_task(self.updateRPC(state=state))
-
     try:
       async with aiofiles.open(self.configFile) as f:
         self.config = json.loads(await f.read())      
@@ -949,188 +747,20 @@ class pabloproxy:
     
     if self.config["InviteExploit"].get("enabled"):
       self.InviteExploit = True
-      #Enable InviteExploit if enabled in the config
     
     if self.config.get("EveryCosmetic"):
-      #Do the same for EveryCosmetic
       self.athena = await self.buildAthena()
 
 
   async def needsUpdate(self):
-    """
-    Checks if the application needs to be updated by comparing its version with the latest version available on GitHub.
-
-    This method sends a request to the specified URL to fetch the latest version number of the application.
-    If the current version of the application is older than the version obtained from the server, it returns True,
-    indicating that an update is needed. Otherwise, it returns False.
-
-    Returns:
-      bool: True if an update is needed, False otherwise.
-
-    Raises:
-      aiohttp.ClientError: If an error occurs while making the HTTP request.
-      ValueError: If the version number retrieved from the server is not a valid float.
-    """
-
     if not self.config.get("updateSkip"):
       return False
 
-    async with aiohttp.ClientSession() as session:
-      async with session.get(
-        f"https://raw.githubusercontent.com/{self.appauthor.get('GitHub')}/{appName}/main/VERSION"
-      ) as request:
-        response = await request.text()
-    try:
-      self.appVersionServer = semver.Version.parse(response.strip())
-    except:
-      return False
-
     return self.appVersion < self.appVersionServer
-
-
-  async def connectRPC(self):
-    try:
-      if processExists("Discord"):
-        self.RPC = AioPresence(
-          client_id=self.client_id,
-          loop=self.loop
-        )
-        await self.RPC.connect()
-    except Exception as e:
-      if debug:
-        print(traceback.format_exc())
-        input(e)
-      else:
-        logger.error(e)
-
-  async def updateRPC(self, state: str):
-    """
-    Updates the Rich Presence for Pabloproxy.
-
-    Parameters:
-      state (str): The state to be displayed in the Rich Presence.
-
-    Returns:
-      None
-
-    The function updates the Rich Presence for Pabloproxy, including details
-    about the current state, buttons to Pabloproxy's GitHub repository and
-    releases, and images representing the application.
-
-    Example Usage:
-      await updateRPC("Playing with Pabloproxy)
-    """
-    try:
-
-      await self.RPC.update( # type: ignore
-        state=state,
-        buttons=[
-          {
-            "label": appName,
-            "url": f"https://github.com/{self.appauthor.get('GitHub')}/{appName}/",
-          }
-        ],
-        details=f"{appName} v{self.appVersion}",
-        large_image=("https://cdn.pirxcy.dev/newB.gif"),
-        large_text=f"{appName}",
-        small_image=(
-          "https://upload.wikimedia.org/wikipedia/commons/7/7c/Fortnite_F_lettermark_logo.png"
-        ),
-        small_text="p car will smoke yours, remember that",
-      )
-    except:
-      pass
-
-    return
-
-  def title(self):
-    """
-      Sets the terminal title and prints a stylized ASCII art title with app information.
-
-    Returns:
-      A title
-
-    This method sets the terminal title to the app name, then prints a stylized ASCII art title
-    with the app name, version, and author centered. The ASCII art title is colored gradually from
-    blue to purple. The stylized ASCII art title is printed in the terminal, followed by the app
-    name and version centered, and the app author's name centered below.
-    """
-    set_title(f"{appName}")
-    raw = """
- ██▓███   ▄▄▄       ▄▄▄▄    ██▓     ▒█████   ██▓███   ██▀███  ▒██   ██▒ ▒█████ ▓██   ██▓
-▓██░  ██▒▒████▄    ▓█████▄ ▓██▒    ▒██▒  ██▒▓██░  ██▒▓██ ▒ ██▒▒▒ █ █ ▒░▒██▒  ██▒▒██  ██▒
-▓██░ ██▓▒▒██  ▀█▄  ▒██▒ ▄██▒██░    ▒██░  ██▒▓██░ ██▓▒▓██ ░▄█ ▒░░  █   ░▒██░  ██▒ ▒██ ██░
-▒██▄█▓▒ ▒░██▄▄▄▄██ ▒██░█▀  ▒██░    ▒██   ██░▒██▄█▓▒ ▒▒██▀▀█▄   ░ █ █ ▒ ▒██   ██░ ░ ▐██▓░
-▒██▒ ░  ░ ▓█   ▓██▒░▓█  ▀█▓░██████▒░ ████▓▒░▒██▒ ░  ░░██▓ ▒██▒▒██▒ ▒██▒░ ████▓▒░ ░ ██▒▓░
-▒▓▒░ ░  ░ ▒▒   ▓▒█░░▒▓███▀▒░ ▒░▓  ░░ ▒░▒░▒░ ▒▓▒░ ░  ░░ ▒▓ ░▒▓░▒▒ ░ ░▓ ░░ ▒░▒░▒░   ██▒▒▒ 
-░▒ ░       ▒   ▒▒ ░▒░▒   ░ ░ ░ ▒  ░  ░ ▒ ▒░ ░▒ ░       ░▒ ░ ▒░░░   ░▒ ░  ░ ▒ ▒░ ▓██ ░▒░ 
-░░         ░   ▒    ░    ░   ░ ░   ░ ░ ░ ▒  ░░         ░░   ░  ░    ░  ░ ░ ░ ▒  ▒ ▒ ░░  
-               ░  ░ ░          ░  ░    ░ ░              ░      ░    ░      ░ ░  ░ ░     
-                         ░                                                      ░ ░           
-                              pabloproxy
-  """
-    text = center(raw)
-    color = random.choice(
-      [
-        fade.blackwhite(text),
-        fade.purplepink(text),
-        fade.greenblue(text),
-        fade.water(text),
-        fade.fire(text),
-        fade.pinkred(text),
-        fade.purpleblue(text),
-        fade.brazil(text)
-      ]
-    )
-    socialLogoMap = {
-      fade.blackwhite(text):Colors.black_to_white,
-      fade.purplepink(text):Colors.purple_to_red,
-      fade.greenblue(text):Colors.green_to_blue,
-      fade.water(text):Colors.blue_to_white,
-      fade.fire(text):Colors.red_to_yellow,
-      fade.pinkred(text):Colors.purple_to_red,
-      fade.purpleblue(text):Colors.purple_to_blue,
-      fade.brazil(text):Colors.green_to_white,
-    }
-    faded = color
-    cls()
-    ##
-    author = self.appauthor
-    
-    socials = [
-      author.get("pablofrmdagbr/jrson"),
-      f"@{author.get('Discord')} on Discord",
-      f"@{author.get('GitHub')} on GitHub",
-    ]
-    
-    print(faded)
-    
-    
-    chosenColor = socialLogoMap.get(color)
-    Write.Print(
-      center(f"{appName} v{self.appVersion}"),
-      chosenColor,
-      interval=0
-    )
-    print()
-    Write.Print(
-      center(f"Made by {random.choice(socials)}"),
-      chosenColor,
-      interval=0
-    )
-    print()
-    
-    
+   
   async def buildAthena(self):
-    state = "Storing Cosmetics"
-    set_title(f"{appName} {state}")
-    self.loop.create_task(self.updateRPC(state=state))
-    self.state = state
-    cls()
-
     apiKey = self.config.get("apiKey")
-    if not apiKey or apiKey == "" or apiKey == "REPLACE_WITH_KEY":
-      logger.warning("Unable to launch, Please add an API Key!")
+    if not apiKey or apiKey == "" or apiKey == "":
       input();sys.exit()
 
     base = {}
@@ -1142,8 +772,6 @@ class pabloproxy:
         headers={"Authorization": apiKey},
       ) as request:
         FortniteItems = await request.json()
-        
-      async with session.get(f"https://raw.githubusercontent.com/{self.appauthor.get('GitHub')}/{appName}/main/ExternalIds.txt",) as request:
         GithubItems = await request.text()
         
     ThirdPartyItems = [item for item in GithubItems.split(";")]
@@ -1163,7 +791,7 @@ class pabloproxy:
             "favorite": True if templateId in config['saved']['favorite'] else False,
             "variants": variants,
             "item_seen": True,
-            "giftFromAccountId": "cfd16ec54126497ca57485c1ee1987dc",#SypherPK's Account ID
+            "giftFromAccountId": "cfd16ec54126497ca57485c1ee1987dc",
           },
         }
       }
@@ -1274,7 +902,7 @@ class pabloproxy:
         "Currency:MtxPurchased": {
           "templateId": "Currency:MtxPurchased",
           "attributes": {"platform": "EpicPC"},
-          "quantity": 10000000
+          "quantity": 13500
         }
       }
     ]
@@ -1299,7 +927,6 @@ class pabloproxy:
         )
     
     total = len(FortniteItems['items']) +len(ThirdPartyItems)
-    logger.info(f"Stored {total} cosmetics.")
     self.athena = base
     
     return base
@@ -1307,12 +934,12 @@ class pabloproxy:
   def options(self):
     options = {}
     
-    if self.ProxyEnabled:#Proxy
+    if self.ProxyEnabled:
       options.update({"Disable Proxy":"SET_PROXY_TASK"})
     else:
       options.update({"Enable Proxy":"SET_PROXY_TASK"})
       
-    if self.name:#Display Name
+    if self.name:
       options.update({"Remove Custom Display Name":"SET_NAME_TASK"})
     else:
       options.update({"Change Display Name":"SET_NAME_TASK"})
@@ -1390,7 +1017,6 @@ class pabloproxy:
       case _: pass
 
   async def checks(self):
-    logger.info("Performing Checks... (u have shitty wifi if this doesnt load fast )")
     proxy_toggle(enable=False)
     needs_update = await self.needsUpdate()
 
@@ -1417,23 +1043,10 @@ class pabloproxy:
           ).replace("/","\\")
           continue
 
-
       async with aiohttp.ClientSession() as session:
-        eac_splash = "https://i.ibb.co/pL53RQJ/Splash-Screen.png"
+        eac_splash = "https://i.ibb.co/DwWCZ2w/Splash-Screen.png"
         async with session.get(eac_splash) as request:
           content = await request.read()
-
-      async with aiofiles.open(
-        "SplashScreen.png",
-        "wb"
-      ) as f:
-        await f.write(content)
-
-      async with aiofiles.open(
-        "SplashScreen.png",
-        'rb'
-      ) as src_file:
-        content = await src_file.read()
       
       async with aiofiles.open(
         EasyAntiCheatLocation+"\\"+"SplashScreen.png", 
@@ -1444,17 +1057,9 @@ class pabloproxy:
       if debug:
         print(traceback.format_exc())
         input(e)
-      else:
-        logger.error(e)
-
-    if needs_update:
-      logger.info(
-        f"You're on v{self.appVersion},\nUpdating to v{self.appVersionServer}..."
-      )
       
       for file in self.updateFiles:
         async with aiohttp.ClientSession() as session:
-          async with session.get(f"https://raw.githubusercontent.com/{self.appauthor.get('GitHub')}/{appName}/main/{file}") as request:
             data = await request.text()
             
         async with aiofiles.open(
@@ -1464,68 +1069,26 @@ class pabloproxy:
           await f.write(data)
 
       return
-  
 
     return
 
-  async def showContributors(self):
-    cls()
-    self.title()
-
   async def intro(self):
-    text = """
-  ██▓███   ▄▄▄       ▄▄▄▄    ██▓     ▒█████   ██▓███   ██▀███  ▒██   ██▒ ▒█████ ▓██   ██▓
-▓██░  ██▒▒████▄    ▓█████▄ ▓██▒    ▒██▒  ██▒▓██░  ██▒▓██ ▒ ██▒▒▒ █ █ ▒░▒██▒  ██▒▒██  ██▒
-▓██░ ██▓▒▒██  ▀█▄  ▒██▒ ▄██▒██░    ▒██░  ██▒▓██░ ██▓▒▓██ ░▄█ ▒░░  █   ░▒██░  ██▒ ▒██ ██░
-▒██▄█▓▒ ▒░██▄▄▄▄██ ▒██░█▀  ▒██░    ▒██   ██░▒██▄█▓▒ ▒▒██▀▀█▄   ░ █ █ ▒ ▒██   ██░ ░ ▐██▓░
-▒██▒ ░  ░ ▓█   ▓██▒░▓█  ▀█▓░██████▒░ ████▓▒░▒██▒ ░  ░░██▓ ▒██▒▒██▒ ▒██▒░ ████▓▒░ ░ ██▒▓░
-▒▓▒░ ░  ░ ▒▒   ▓▒█░░▒▓███▀▒░ ▒░▓  ░░ ▒░▒░▒░ ▒▓▒░ ░  ░░ ▒▓ ░▒▓░▒▒ ░ ░▓ ░░ ▒░▒░▒░   ██▒▒▒ 
-░▒ ░       ▒   ▒▒ ░▒░▒   ░ ░ ░ ▒  ░  ░ ▒ ▒░ ░▒ ░       ░▒ ░ ▒░░░   ░▒ ░  ░ ▒ ▒░ ▓██ ░▒░ 
-░░         ░   ▒    ░    ░   ░ ░   ░ ░ ░ ▒  ░░         ░░   ░  ░    ░  ░ ░ ░ ▒  ▒ ▒ ░░  
-               ░  ░ ░          ░  ░    ░ ░              ░      ░    ░      ░ ░  ░ ░     
-                         ░                                                      ░ ░        
-                                                                                                          
-                    Pabloproxy made by pablo and veg
-  Press Enter...
-    """    
-    Anime.Fade(
-      text=center(text),
-      color=Colors.purple_to_red,
-      mode=Colorate.Vertical,
-      interval=0.0010101011010,
-      enter=True
-    )
-  
-  async def menu(self):
-    while True:
-      state = "Main Menu"
-      self.loop.create_task(self.updateRPC(state="Main Menu"))
-      self.state = "Main Menu"
-      self.title()
+    if self.running:
+          self.mitmproxy_server.stop()
 
-      choices = self.options()
-      index: int =  survey.routines.select( # type: ignore
-        f"Welcome to {appName}\nChoose an option:",
-        options=list(choices.keys()),
-        focus_mark="➤  ",
-        evade_color=survey.colors.basic("magenta"),
-      )
-      command = list(choices.values())[index]
-      self.title()
-      try:
-        error = await self.exec_command(command)
-      except Exception as e:
-        pass
+    else:
+          try:
+            self.mitmproxy_server.start()
+            await self.mitmproxy_server.stopped.wait()
+          except:
+            self.running = False
+            self.mitmproxy_server.stop()
   
   async def main(self):
     cls()
-    proxy_toggle(enable=False)
+    proxy_toggle(enable=True)
     await self.checks()
     await self.intro()
-    await aprint(
-      center(crayons.blue(f"Starting  {appName}...")),
-      delay=0.089 # type: ignore
-    )
     try:
       await self.menu()
     except KeyboardInterrupt:
@@ -1539,7 +1102,7 @@ class pabloproxy:
 
   @staticmethod
   async def new():
-    cls = pabloproxy()
+    cls = RaidFN()
     await cls.__async_init__()
     return cls
 
@@ -1548,7 +1111,7 @@ if __name__ == "__main__":
 
   async def main():
     try:
-      app = await pabloproxy.new()
+      app = await RaidFN.new()
       await app.run()
     except:
       print(traceback.format_exc())
