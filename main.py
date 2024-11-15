@@ -713,14 +713,10 @@ class RaidFN:
     self,
     loop: asyncio.AbstractEventLoop | None=None,
     configFile: str = "userConfig.json",
-    client_id=1228345213161050232
   ):
     self.loop = loop or asyncio.get_event_loop()
     self.ProxyEnabled = False
     self.configFile = configFile
-    self.state = ""
-    self.appVersion = semver.Version.parse("1.1.0")
-    self.client_id = client_id
     self.mitmproxy_server = MitmproxyServer(
       app=self,
       loop=self.loop
