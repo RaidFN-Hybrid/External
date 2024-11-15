@@ -1,19 +1,15 @@
-import sys,os
+import sys, os
 import semver 
 import survey
 import aiohttp
 import asyncio
 import traceback
-import json,json
+import json
 import logging
 import winreg
 import aiofiles
 import psutil
-
-
-
 import xml.etree.ElementTree as ET
-
 from datetime import datetime
 from rich import print_json
 from console.utils import set_title
@@ -21,7 +17,6 @@ from mitmproxy.tools.web.master import WebMaster
 from mitmproxy import http
 from mitmproxy.options import Options
 from pypresence import AioPresence
-
 
 appName = "RaidFN"
 debug = False
@@ -635,11 +630,6 @@ class Addon:
             nameNew
           )
 
-      if "/lfg/fortnite/tags" in url.lower() and self.server.app.InviteExploit:
-        users = readConfig()
-        users = users["InviteExploit"]["users"]
-        flow.response.text = json.dumps({"users": users})
-
     except Exception as e:
       if debug:
         print(traceback.format_exc())
@@ -675,6 +665,8 @@ class MitmproxyServer:
       set_title(f"{appName}")
       closeFortnite = readConfig()['closeFortnite']
       if closeFortnite:
+        if self.running:
+          self.mitmproxy_server.stop()
         startupTasks = [
           "taskkill /im FortniteLauncher.exe /F",
           "taskkill /im FortniteClient-Win64-Shipping_EAC_EOS.exe /F",
@@ -713,10 +705,14 @@ class RaidFN:
     self,
     loop: asyncio.AbstractEventLoop | None=None,
     configFile: str = "userConfig.json",
+    client_id=1228345213161050232
   ):
     self.loop = loop or asyncio.get_event_loop()
     self.ProxyEnabled = False
     self.configFile = configFile
+    self.state = ""
+    self.appVersion = semver.Version.parse("1.1.0")
+    self.client_id = client_id
     self.mitmproxy_server = MitmproxyServer(
       app=self,
       loop=self.loop
@@ -741,21 +737,8 @@ class RaidFN:
     except: 
       pass
     
-    if self.config["InviteExploit"].get("enabled"):
-      self.InviteExploit = True
-    
     if self.config.get("EveryCosmetic"):
       self.athena = await self.buildAthena()
-
-
-  async def needsUpdate(self):
-    if not self.config.get("updateSkip"):
-      return False
-   
-  async def buildAthena(self):
-    apiKey = self.config.get("apiKey")
-    if not apiKey or apiKey == "" or apiKey == "":
-      input();sys.exit()
 
     base = {}
 
@@ -763,7 +746,6 @@ class RaidFN:
     async with aiohttp.ClientSession() as session:
       async with session.get(
         "https://fortniteapi.io/v2/items/list?fields=id,name,styles,type",
-        headers={"Authorization": apiKey},
       ) as request:
         FortniteItems = await request.json()
         GithubItems = await request.text()
@@ -924,91 +906,6 @@ class RaidFN:
     self.athena = base
     
     return base
-
-  def options(self):
-    options = {}
-    
-    if self.ProxyEnabled:
-      options.update({"Disable Proxy":"SET_PROXY_TASK"})
-    else:
-      options.update({"Enable Proxy":"SET_PROXY_TASK"})
-      
-    if self.name:
-      options.update({"Remove Custom Display Name":"SET_NAME_TASK"})
-    else:
-      options.update({"Change Display Name":"SET_NAME_TASK"})
-    
-    if self.playlist:
-      options.update({"Remove Custom Playlist":"SET_PLAYLIST_TASK"})
-    else:
-      options.update({"Set Playlist":"SET_PLAYLIST_TASK"})
-      
-    if self.playlist:
-      options.update({"Remove Custom Playlist":"SET_PLAYLIST_TASK"})
-    else:
-      options.update({"Set Playlist":"SET_PLAYLIST_TASK"})
-      
-      
-    
-    options.update({f"Change Level": "SET_LEVEL_TASK"})
-    options.update({f"Change Battle Stars": "SET_BATTLESTARS_TASK"})
-    options.update({f"Change Crowns": "SET_CROWN_TASK"})
-    
-    options.update({f"Exit {appName}": "EXIT_TASK"})
-
-    return options
-
-  async def exec_command(self, option: str):
-    options = self.options()
-    match option:
-      case "SET_PROXY_TASK":
-        if self.running:
-          self.mitmproxy_server.stop()
-
-        else:
-          try:
-            self.mitmproxy_server.start()
-            await self.mitmproxy_server.stopped.wait()
-          except:
-            self.running = False
-            self.mitmproxy_server.stop()
-
-      case "SET_NAME_TASK":
-        self.name = not self.name
-        if not self.name:
-          self.nameId = {}
-        else:
-          old = input(f"[+] Current Name: ")
-          new = input(f"[+] Enter New Display Name to Replace {old}: ")
-          self.nameId[old] = new
-        
-      case "SET_LEVEL_TASK":
-        level = input(f"[+] Set Level: ")
-        self.level = int(level)
-        
-      case "SET_BATTLESTARS_TASK":
-        battleStars = input(f"[+] Set Battle Stars: ")
-        self.battleStars = int(battleStars)
-        
-      case "SET_CROWN_TASK":
-        crowns = input(f"[+] Set Battle Stars: ")
-        self.crowns = int(crowns)
-
-      case "SET_PLAYLIST_TASK":
-        self.playlist = not self.playlist
-        if not self.playlist:
-          self.playlistId = {}
-          return
-        new = input(
-          f"[+] Enter New Playlist To Overide {self.config.get('Playlist')}: "
-        )
-        self.playlistId[self.config.get("Playlist", "")] = new
-        
-      case "EXIT_TASK":
-        proxy_toggle(enable=False)
-        cls()
-        sys.exit(1)
-      case _: pass
 
   async def checks(self):
     proxy_toggle(enable=False)
