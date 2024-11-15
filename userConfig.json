@@ -1,0 +1,98 @@
+{
+  "EveryCosmetic": true,
+  "saved": {
+    "presets": {
+      "character": {
+        "1": {
+          "presetType": "CosmeticLoadout:LoadoutSchema_Character",
+          "presetId": 1,
+          "slots": [
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Character",
+              "equipped_item": "AthenaCharacter:cid_028_athena_commando_f",
+              "customization_info": [
+                {
+                  "channel_tag": "Material",
+                  "variant_tag": "Mat1"
+                }
+              ]
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Backpack"
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Pickaxe",
+              "equipped_item": "AthenaPickaxe:defaultpickaxe"
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Glider",
+              "equipped_item": "AthenaGlider:defaultglider"
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Contrails"
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Aura",
+              "equipped_item": "SparksAura:sparksaura_default"
+            }
+          ]
+        },
+        "4": {
+          "presetType": "CosmeticLoadout:LoadoutSchema_Character",
+          "presetId": 4,
+          "slots": [
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Character",
+              "equipped_item": "AthenaCharacter:cid_028_athena_commando_f",
+              "customization_info": [
+                {
+                  "channel_tag": "Material",
+                  "variant_tag": "Mat1"
+                }
+              ]
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Backpack",
+              "equipped_item": "AthenaBackpack:bid_105_ghostportal",
+              "customization_info": [
+                {
+                  "channel_tag": "Particle",
+                  "variant_tag": "Particle1"
+                }
+              ]
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Pickaxe",
+              "equipped_item": "AthenaPickaxe:pickaxe_id_508_historianmale_6bqsw"
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Glider",
+              "equipped_item": "AthenaGlider:defaultglider"
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Contrails"
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Aura",
+              "equipped_item": "SparksAura:sparksaura_default"
+            }
+          ]
+        }
+      },
+      "emotes": {},
+      "lobby": {},
+      "wraps": {},
+      "sports": {},
+      "suv": {},
+      "instruments": {},
+      "jam": {}
+    },
+    "favorite": [
+      "AthenaDance:EID_Floss",
+      "AthenaDance:EID_KPopDance03",
+      "AthenaDance:EID_TakeTheL",
+      "AthenaDance:EID_Fresh"
+    ],
+    "archived": []
+  }
+}
