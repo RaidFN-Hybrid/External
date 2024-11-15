@@ -751,8 +751,6 @@ class RaidFN:
   async def needsUpdate(self):
     if not self.config.get("updateSkip"):
       return False
-
-    return self.appVersion < self.appVersionServer
    
   async def buildAthena(self):
     apiKey = self.config.get("apiKey")
