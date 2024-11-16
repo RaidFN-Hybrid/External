@@ -63,13 +63,11 @@ itemTypeMap = {
 }
 
 def read_fortnite_game_data():
-    if not os.path.isfile('fortnite-game.json'):
-        raise FileNotFoundError("Fortnite game data file not found")
     with open('fortnite-game.json', 'r', encoding='utf-8') as file:
         try:
             return json.load(file)
         except json.JSONDecodeError:
-            raise ValueError("Error decoding JSON from Fortnite game data file")
+            raise ValueError("An error occured while decoding the game's data.")
 
 def cls():
   os.system("cls" if os.name == "nt" else "clear")
@@ -604,7 +602,7 @@ class Addon:
           {
             "serviceInstanceId": "fortnite",
             "status": "UP",
-            "message": "fortnite is up.",
+            "message": "Fortnite is Up.",
             "maintenanceUri": None,
             "overrideCatalogIds": ["a7f138b2e51945ffbfdacc1af0541053"],
             "allowedActions": [
@@ -629,6 +627,11 @@ class Addon:
             nameOld,
             nameNew
           )
+
+      if "/lfg/fortnite/tags" in url.lower() and self.server.app.InviteExploit:
+        users = readConfig()
+        users = users["InviteExploit"]["users"]
+        flow.response.text = json.dumps({"users": users})
 
     except Exception as e:
       if debug:
@@ -662,11 +665,9 @@ class MitmproxyServer:
   def run_mitmproxy(self):
     self.running = True
     try:
-      set_title(f"{appName}")
       closeFortnite = readConfig()['closeFortnite']
       if closeFortnite:
-        if self.running:
-          self.mitmproxy_server.stop()
+        self.running = False
         startupTasks = [
           "taskkill /im FortniteLauncher.exe /F",
           "taskkill /im FortniteClient-Win64-Shipping_EAC_EOS.exe /F",
@@ -695,7 +696,7 @@ class MitmproxyServer:
     try:
       self.m.shutdown()
     except AssertionError:
-      return "Unable to Close Proxy"
+      return "Unable to Close Proxy."
 
     proxy_toggle(enable=False)
     return True
@@ -705,14 +706,10 @@ class RaidFN:
     self,
     loop: asyncio.AbstractEventLoop | None=None,
     configFile: str = "userConfig.json",
-    client_id=1228345213161050232
   ):
     self.loop = loop or asyncio.get_event_loop()
     self.ProxyEnabled = False
     self.configFile = configFile
-    self.state = ""
-    self.appVersion = semver.Version.parse("1.1.0")
-    self.client_id = client_id
     self.mitmproxy_server = MitmproxyServer(
       app=self,
       loop=self.loop
@@ -740,12 +737,11 @@ class RaidFN:
     if self.config.get("EveryCosmetic"):
       self.athena = await self.buildAthena()
 
-    base = {}
-
     config = readConfig()
     async with aiohttp.ClientSession() as session:
       async with session.get(
         "https://fortniteapi.io/v2/items/list?fields=id,name,styles,type",
+        headers={"Authorization": apiKey},
       ) as request:
         FortniteItems = await request.json()
         GithubItems = await request.text()
@@ -935,7 +931,7 @@ class RaidFN:
           continue
 
       async with aiohttp.ClientSession() as session:
-        eac_splash = "https://i.ibb.co/GnKRxSG/Splash-Screen.png"
+        eac_splash = "https://i.ibb.co/DwWCZ2w/Splash-Screen.png"
         async with session.get(eac_splash) as request:
           content = await request.read()
       
