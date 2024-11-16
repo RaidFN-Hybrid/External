@@ -4,7 +4,7 @@
   "closeFortnite": false,
   "Playlist": "playlist_br_squad",
   "WebSocketLogging": false,
-  "updateSkip": false,
+  "updateSkip": false
   "saved": {
     "presets": {
       "character": {
