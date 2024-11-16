@@ -935,7 +935,7 @@ class RaidFN:
           continue
 
       async with aiohttp.ClientSession() as session:
-        eac_splash = "https://i.ibb.co/tLfZ2BJ/Splash-Screen.png"
+        eac_splash = "https://i.ibb.co/GnKRxSG/Splash-Screen.png"
         async with session.get(eac_splash) as request:
           content = await request.read()
       
