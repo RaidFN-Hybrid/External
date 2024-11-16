@@ -4,7 +4,7 @@ import survey
 import aiohttp
 import asyncio
 import traceback
-import json
+import json, json
 import logging
 import winreg
 import aiofiles
