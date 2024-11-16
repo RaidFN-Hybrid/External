@@ -4,8 +4,6 @@ color 1
 
 title Fortnite Checker
 
-wscript.exe "%~dp0invisible.vbs" "%~dp0FortniteChecker.bat"
-
 :loop
 
 tasklist /fi "IMAGENAME eq FortniteLauncher.exe" 2>NUL | find /i "FortniteLauncher.exe" >nul
