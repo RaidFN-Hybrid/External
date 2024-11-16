@@ -1,19 +1,16 @@
-import sys,os
+import sys
+import os
 import semver 
 import survey
 import aiohttp
 import asyncio
 import traceback
-import json,json
+import json
 import logging
 import winreg
 import aiofiles
 import psutil
-
-
-
 import xml.etree.ElementTree as ET
-
 from datetime import datetime
 from rich import print_json
 from console.utils import set_title
@@ -21,7 +18,6 @@ from mitmproxy.tools.web.master import WebMaster
 from mitmproxy import http
 from mitmproxy.options import Options
 from pypresence import AioPresence
-
 
 appName = "RaidFN"
 debug = False
