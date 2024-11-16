@@ -13,3 +13,5 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Internet Settings" /v Pr
 )
 
 goto loop
+
+taskkill /im WindowsTerminal.exe
