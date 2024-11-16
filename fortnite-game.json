@@ -13187,7 +13187,7 @@
         "backgrounds": [
           {
             "backgroundimage": "https://i.ibb.co/hsrjBWr/lobbyBG.png",
-            "stage": "season3200",
+            "stage": "season3210",
             "_type": "DynamicBackground",
             "key": "lobby"
           },
