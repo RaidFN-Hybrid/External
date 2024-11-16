@@ -2,7 +2,7 @@
 
 color 1
 
-title Fortnite Status Checker
+title Fortnite Logs
 
 :logs
 
