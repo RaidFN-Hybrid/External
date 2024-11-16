@@ -13187,7 +13187,7 @@
         "backgrounds": [
           {
             "backgroundimage": "https://i.ibb.co/hsrjBWr/lobbyBG.png",
-            "stage": "season3100",
+            "stage": "season3200",
             "_type": "DynamicBackground",
             "key": "lobby"
           },
@@ -21384,7 +21384,7 @@
             "hidden": false,
             "_type": "CommonUI Emergency Notice Base",
             "title": "Welcome to RaidFN!",
-            "body": "🔥 Made by Fox & Vegemite"
+            "body": "🔥 Made by Fox & Vegemite\n💎 https://discord.gg/V7a5VZ5h"
             }
         ]
         },
