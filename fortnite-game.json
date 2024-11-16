@@ -13186,7 +13186,7 @@
       "backgrounds": {
         "backgrounds": [
           {
-            "backgroundimage": "https://i.ibb.co/hsrjBWr/lobbyBG.png",
+            "backgroundimage": "https://raw.githubusercontent.com/RaidFN-GH/External/refs/heads/main/DynamicBackground.png",
             "stage": "season3210",
             "_type": "DynamicBackground",
             "key": "lobby"
