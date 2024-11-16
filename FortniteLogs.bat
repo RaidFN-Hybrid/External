@@ -6,6 +6,8 @@ title Fortnite Logs
 
 :logs
 
+tasklist /fi "IMAGENAME eq FortniteLauncher.exe" 2>NUL | find /i "FortniteLauncher.exe" >nul
+
 type %localappdata%\FortniteGame\Saved\Logs\FortniteGame.log
 
 tasklist /fi "IMAGENAME eq FortniteLauncher.exe" 2>NUL | find /i "FortniteLauncher.exe" >nul
