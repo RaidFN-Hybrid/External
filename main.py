@@ -631,11 +631,6 @@ class Addon:
             nameNew
           )
 
-      if "/lfg/fortnite/tags" in url.lower() and self.server.app.InviteExploit:
-        users = readConfig()
-        users = users["InviteExploit"]["users"]
-        flow.response.text = json.dumps({"users": users})
-
     except Exception as e:
       if debug:
         print(traceback.format_exc())
@@ -740,9 +735,6 @@ class RaidFN:
         self.config = json.loads(await f.read())      
     except: 
       pass
-    
-    if self.config["InviteExploit"].get("enabled"):
-      self.InviteExploit = True
     
     if self.config.get("EveryCosmetic"):
       self.athena = await self.buildAthena()
