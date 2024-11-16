@@ -1,7 +1,10 @@
 {
   "apiKey": "0a55f293-f0bb3f67-f29e0ef6-78d294f7",
   "EveryCosmetic": true,
-  "Playlist": "playlist_nobuildbr_squad"
+  "closeFortnite": false,
+  "Playlist": "playlist_br_squad",
+  "WebSocketLogging": false,
+  "updateSkip": false,
   "saved": {
     "presets": {
       "character": {
