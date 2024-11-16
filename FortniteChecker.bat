@@ -2,7 +2,7 @@
 
 color 1
 
-title Fortnite Checker
+title Fortnite Status Checker
 
 :loop
 
