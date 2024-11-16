@@ -4,7 +4,15 @@
   "closeFortnite": false,
   "Playlist": "playlist_br_squad",
   "WebSocketLogging": false,
-  "updateSkip": false
+  "updateSkip": false,
+  "InviteExploit": {
+    "enabled": true,
+    "users": [
+      "",
+      "",
+      ""
+    ]
+  },
   "saved": {
     "presets": {
       "character": {
