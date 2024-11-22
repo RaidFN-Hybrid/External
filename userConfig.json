@@ -22,7 +22,7 @@
           "slots": [
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Character",
-              "equipped_item": "AthenaCharacter:cid_028_athena_commando_f",
+              "equipped_item": "AthenaCharacter:CID_028_Athena_Commando_F",
               "customization_info": [
                 {
                   "channel_tag": "Material",
@@ -35,18 +35,22 @@
             },
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Pickaxe",
-              "equipped_item": "AthenaPickaxe:defaultpickaxe"
+              "equipped_item": "AthenaPickaxe:DefaultPickaxe"
             },
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Glider",
-              "equipped_item": "AthenaGlider:defaultglider"
+              "equipped_item": "AthenaGlider:DefaultGlider"
             },
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Contrails"
             },
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Aura",
-              "equipped_item": "SparksAura:sparksaura_default"
+              "equipped_item": "SparksAura:SparksAura_Default"
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Shoes",
+              "equipped_item": "Shoes:Shoes_Default"
             }
           ]
         },
@@ -56,7 +60,7 @@
           "slots": [
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Character",
-              "equipped_item": "AthenaCharacter:cid_028_athena_commando_f",
+              "equipped_item": "AthenaCharacter:CID_028_Athena_Commando_F",
               "customization_info": [
                 {
                   "channel_tag": "Material",
@@ -66,7 +70,7 @@
             },
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Backpack",
-              "equipped_item": "AthenaBackpack:bid_105_ghostportal",
+              "equipped_item": "AthenaBackpack:BID_105_GhostPortal",
               "customization_info": [
                 {
                   "channel_tag": "Particle",
@@ -76,18 +80,22 @@
             },
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Pickaxe",
-              "equipped_item": "AthenaPickaxe:pickaxe_id_508_historianmale_6bqsw"
+              "equipped_item": "AthenaPickaxe:Pickaxe_ID_508_HistorianMale_6BQSW"
             },
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Glider",
-              "equipped_item": "AthenaGlider:defaultglider"
+              "equipped_item": "AthenaGlider:DefaultGlider"
             },
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Contrails"
             },
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Aura",
-              "equipped_item": "SparksAura:sparksaura_default"
+              "equipped_item": "SparksAura:SparksAura_Default"
+            },
+            {
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Shoes",
+              "equipped_item": "Shoes:Shoes_Default"
             }
           ]
         }
@@ -104,7 +112,8 @@
       "AthenaDance:EID_Floss",
       "AthenaDance:EID_KPopDance03",
       "AthenaDance:EID_TakeTheL",
-      "AthenaDance:EID_Fresh"
+      "AthenaDance:EID_Fresh",
+      "AthenaDance:EID_Kelplinen"
     ],
     "archived": []
   }
