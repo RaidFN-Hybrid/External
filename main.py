@@ -23,7 +23,8 @@ appName = "RaidFN"
 debug = False
 
 backendTypeMap = {
-  "CID": "AthenaCharacter"
+  "CID": "AthenaCharacter",
+  "Shoes": "AthenaShoes"
 }
 
 itemTypeMap = {
@@ -32,7 +33,6 @@ itemTypeMap = {
   "outfit": "AthenaCharacter",
   "toy": "AthenaDance",
   "glider": "AthenaGlider",
-  "kicks": "AthenaKicks",
   "emoji": "AthenaDance",
   "pet": "AthenaPetCarrier",
   "spray": "AthenaDance",
@@ -208,7 +208,6 @@ class Addon:
         presetMap = {
           "CosmeticLoadout:LoadoutSchema_Character":"character",
           "CosmeticLoadout:LoadoutSchema_Emotes": "emotes",
-          "CosmeticLoadout:LoadoutSchema_Kicks": "kicks",
           "CosmeticLoadout:LoadoutSchema_Platform": "lobby",
           "CosmeticLoadout:LoadoutSchema_Wraps": "wraps",
           "CosmeticLoadout:LoadoutSchema_Jam": "jam",
