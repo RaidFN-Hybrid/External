@@ -49,8 +49,8 @@
               "equipped_item": "SparksAura:SparksAura_Default"
             },
             {
-              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Shoes",
-              "equipped_item": "Shoes:Shoes_Default"
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Kicks",
+              "equipped_item": "Kicks:Shoes_BreathTalePeony"
             }
           ]
         },
@@ -94,8 +94,8 @@
               "equipped_item": "SparksAura:SparksAura_Default"
             },
             {
-              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Shoes",
-              "equipped_item": "Shoes:Shoes_Default"
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Kicks",
+              "equipped_item": "Kicks:Shoes_BreathTalePeony"
             }
           ]
         }
