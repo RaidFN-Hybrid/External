@@ -24,7 +24,7 @@ debug = False
 
 backendTypeMap = {
   "CID": "AthenaCharacter",
-  "Shoes": "AthenaShoes"
+  "Shoes": "AthenaKicks"
 }
 
 itemTypeMap = {
