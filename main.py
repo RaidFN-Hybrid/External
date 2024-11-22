@@ -208,7 +208,6 @@ class Addon:
         presetMap = {
           "CosmeticLoadout:LoadoutSchema_Character":"character",
           "CosmeticLoadout:LoadoutSchema_Emotes": "emotes",
-          "CosmeticLoadout:LoadoutSchema_Shoes": "shoes",
           "CosmeticLoadout:LoadoutSchema_Platform": "lobby",
           "CosmeticLoadout:LoadoutSchema_Wraps": "wraps",
           "CosmeticLoadout:LoadoutSchema_Jam": "jam",
