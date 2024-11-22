@@ -32,7 +32,7 @@ itemTypeMap = {
   "outfit": "AthenaCharacter",
   "toy": "AthenaDance",
   "glider": "AthenaGlider",
-  "kicks": "AthenaShoes",
+  "kicks": "AthenaKicks",
   "emoji": "AthenaDance",
   "pet": "AthenaPetCarrier",
   "spray": "AthenaDance",
