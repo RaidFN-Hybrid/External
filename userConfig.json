@@ -6,7 +6,7 @@
   "WebSocketLogging": false,
   "updateSkip": false,
   "InviteExploit": {
-    "enabled": true,
+    "enabled": false,
     "users": [
       "",
       "",
