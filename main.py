@@ -32,6 +32,7 @@ itemTypeMap = {
   "outfit": "AthenaCharacter",
   "toy": "AthenaDance",
   "glider": "AthenaGlider",
+  "glider": "AthenaShoes",
   "emoji": "AthenaDance",
   "pet": "AthenaPetCarrier",
   "spray": "AthenaDance",
@@ -207,6 +208,7 @@ class Addon:
         presetMap = {
           "CosmeticLoadout:LoadoutSchema_Character":"character",
           "CosmeticLoadout:LoadoutSchema_Emotes": "emotes",
+          "CosmeticLoadout:LoadoutSchema_Shoes": "shoes",
           "CosmeticLoadout:LoadoutSchema_Platform": "lobby",
           "CosmeticLoadout:LoadoutSchema_Wraps": "wraps",
           "CosmeticLoadout:LoadoutSchema_Jam": "jam",
@@ -287,6 +289,7 @@ class Addon:
                   "loadout_presets": {
                     "CosmeticLoadout:LoadoutSchema_Character": {},
                     "CosmeticLoadout:LoadoutSchema_Emotes": {},
+                    "CosmeticLoadout:LoadoutSchema_Shoes": {},
                     "CosmeticLoadout:LoadoutSchema_Platform": {},
                     "CosmeticLoadout:LoadoutSchema_Wraps": {},
                     "CosmeticLoadout:LoadoutSchema_Jam": {},
