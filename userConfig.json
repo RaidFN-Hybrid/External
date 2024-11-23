@@ -6,7 +6,7 @@
   "WebSocketLogging": false,
   "updateSkip": false,
   "InviteExploit": {
-    "enabled": false,
+    "enabled": true,
     "users": [
       "",
       "",
@@ -26,7 +26,7 @@
               "customization_info": [
                 {
                   "channel_tag": "Material",
-                  "variant_tag": "Mat2"
+                  "variant_tag": "Mat1"
                 }
               ]
             },
@@ -49,8 +49,8 @@
               "equipped_item": "SparksAura:SparksAura_Default"
             },
             {
-              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Kicks",
-              "equipped_item": "Kicks:Shoes_BreathTalePeony"
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Shoes",
+              "equipped_item": "Shoes:Shoes_Default"
             }
           ]
         },
@@ -64,7 +64,7 @@
               "customization_info": [
                 {
                   "channel_tag": "Material",
-                  "variant_tag": "Mat2"
+                  "variant_tag": "Mat1"
                 }
               ]
             },
@@ -74,7 +74,7 @@
               "customization_info": [
                 {
                   "channel_tag": "Particle",
-                  "variant_tag": "Particle2"
+                  "variant_tag": "Particle1"
                 }
               ]
             },
@@ -94,8 +94,8 @@
               "equipped_item": "SparksAura:SparksAura_Default"
             },
             {
-              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Kicks",
-              "equipped_item": "Kicks:Shoes_BreathTalePeony"
+              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Shoes",
+              "equipped_item": "Shoes:Shoes_Default"
             }
           ]
         }
