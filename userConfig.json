@@ -6,7 +6,7 @@
   "WebSocketLogging": false,
   "updateSkip": false,
   "InviteExploit": {
-    "enabled": true,
+    "enabled": false,
     "users": [
       "",
       "",
@@ -47,10 +47,6 @@
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Aura",
               "equipped_item": "SparksAura:SparksAura_Default"
-            },
-            {
-              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Shoes",
-              "equipped_item": "Shoes:Shoes_Default"
             }
           ]
         },
@@ -92,10 +88,6 @@
             {
               "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Aura",
               "equipped_item": "SparksAura:SparksAura_Default"
-            },
-            {
-              "slot_template": "CosmeticLoadoutSlotTemplate:LoadoutSlot_Shoes",
-              "equipped_item": "Shoes:Shoes_Default"
             }
           ]
         }
