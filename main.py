@@ -32,7 +32,6 @@ itemTypeMap = {
   "outfit": "AthenaCharacter",
   "toy": "AthenaDance",
   "glider": "AthenaGlider",
-  "kicks": "AthenaShoes",
   "emoji": "AthenaDance",
   "pet": "AthenaPetCarrier",
   "spray": "AthenaDance",
@@ -66,12 +65,12 @@ itemTypeMap = {
 
 def read_fortnite_game_data():
     if not os.path.isfile('fortnite-game.json'):
-        raise FileNotFoundError("The game's data was not found.")
+        raise FileNotFoundError("Fortnite game data file not found")
     with open('fortnite-game.json', 'r', encoding='utf-8') as file:
         try:
             return json.load(file)
         except json.JSONDecodeError:
-            raise ValueError("An error occured while decoding the game's data.")
+            raise ValueError("Error decoding JSON from Fortnite game data file")
 
 def cls():
   os.system("cls" if os.name == "nt" else "clear")
@@ -208,7 +207,6 @@ class Addon:
         presetMap = {
           "CosmeticLoadout:LoadoutSchema_Character":"character",
           "CosmeticLoadout:LoadoutSchema_Emotes": "emotes",
-          "CosmeticLoadout:LoadoutSchema_Kicks": "kicks",
           "CosmeticLoadout:LoadoutSchema_Platform": "lobby",
           "CosmeticLoadout:LoadoutSchema_Wraps": "wraps",
           "CosmeticLoadout:LoadoutSchema_Jam": "jam",
@@ -289,7 +287,6 @@ class Addon:
                   "loadout_presets": {
                     "CosmeticLoadout:LoadoutSchema_Character": {},
                     "CosmeticLoadout:LoadoutSchema_Emotes": {},
-                    "CosmeticLoadout:LoadoutSchema_Kicks": {},
                     "CosmeticLoadout:LoadoutSchema_Platform": {},
                     "CosmeticLoadout:LoadoutSchema_Wraps": {},
                     "CosmeticLoadout:LoadoutSchema_Jam": {},
@@ -608,7 +605,7 @@ class Addon:
           {
             "serviceInstanceId": "fortnite",
             "status": "UP",
-            "message": "Fortnite is up.",
+            "message": "fortnite is up.",
             "maintenanceUri": None,
             "overrideCatalogIds": ["a7f138b2e51945ffbfdacc1af0541053"],
             "allowedActions": [
